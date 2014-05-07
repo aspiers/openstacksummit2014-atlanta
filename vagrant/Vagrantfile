@@ -28,6 +28,9 @@ Vagrant.configure(vagrantfile_api_version) do |config|
 
     admin.vm.network :forwarded_port, guest: 3000, host: 3000
     admin.vm.network "private_network", ip: "192.168.124.10"
+    # Additional NIC for bonding. The IP address here is just to make vagrant
+    # happy it's not actually used inside the VM
+    admin.vm.network "private_network", ip: "192.168.124.9", auto_config: false
     # admin.vm.network "public_network"
     # admin.ssh.forward_agent = true
 
@@ -49,8 +52,8 @@ Vagrant.configure(vagrantfile_api_version) do |config|
        export PATH="$PATH:/sbin:/usr/sbin/"
        export REPOS_SKIP_CHECKS="SLES11_SP3 SLES11-SP3-Pool"
        # To trick install-suse-clouds check for "screen". It should be save
-       # to run with screen here. As install-suse-cloud won't pull the network
-       # from eth0 because of the above patch.
+       # to run without screen here. As install-suse-cloud won't pull the
+       # network from eth0 because of the above patch.
        export STY="dummy"
        install-suse-cloud -v
     EOSCRIPT
